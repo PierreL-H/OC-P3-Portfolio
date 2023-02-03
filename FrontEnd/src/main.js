@@ -1,31 +1,13 @@
-import { Work } from './works.js'
+import { getWorks } from './works.js'
+import { getFilterCategories, appendFilterButtons, addFilterEventListeners } from './filter.js'
 console.log('test')
 
-// append a work to the .gallery div
-const appendWork = (work) => {
-  const figureElement = document.createElement('figure')
-  const galleryElement = document.querySelector('.gallery')
-  const imgElement = document.createElement('img')
-  const figcaptionElement = document.createElement('figcaption')
-  imgElement.src = work.imageUrl
-  imgElement.crossOrigin = 'anonymous'
-  imgElement.alt = work.title
-  figcaptionElement.textContent = work.title
-  figureElement.appendChild(imgElement)
-  figureElement.appendChild(figcaptionElement)
-  galleryElement.appendChild(figureElement)
-}
-
-// fetch works from API
-const getWorks = async () => {
-  await fetch('http://localhost:5678/api/works')
-    .then(response => response.json())
-    .then(jsonWorks => {
-      for (const jsonWork of jsonWorks) {
-        const work = new Work(jsonWork)
-        console.log(work)
-        appendWork(work)
-      }
-    })
-}
-getWorks()
+const works = await getWorks()
+// const categorySet = new Set()
+// for (const work of works) {
+//   const category = work.category
+//   categorySet.add(category.name)
+// }
+const categories = getFilterCategories(works)
+appendFilterButtons(categories)
+addFilterEventListeners(works)
