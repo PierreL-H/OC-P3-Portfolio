@@ -214,9 +214,16 @@ input[type="submit"]{
 
 #login {
 	margin-top: 150px;
+	margin-bottom: 150px;
 }
 #login p {
 	text-align: center;
+}
+#login .error {
+	margin-top: 1.5em;
+	height: 2em;
+	visibility: hidden;
+	color: red;
 }
 footer nav ul {
 	display: flex;
