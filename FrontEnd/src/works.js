@@ -8,6 +8,7 @@ export class Work {
 // append a work to the .gallery div
 export const appendWork = (work) => {
   const figureElement = document.createElement('figure')
+  figureElement.dataset.id = work.id
   const galleryElement = document.querySelector('.gallery')
   const imgElement = document.createElement('img')
   const figcaptionElement = document.createElement('figcaption')
@@ -28,4 +29,16 @@ export const getWorks = async () => {
     appendWork(work)
   }
   return worksJson
+}
+
+// delete work from DB
+export const deleteWork = async (workID) => {
+  const response = await fetch(`http://localhost:5678/api/works/${workID}`, {
+    method: 'delete',
+    headers: {
+      Authorization: 'Bearer ' + window.sessionStorage.getItem('access_token')
+    }
+  })
+  console.log(response)
+  return response
 }

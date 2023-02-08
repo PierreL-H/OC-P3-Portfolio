@@ -291,3 +291,29 @@ footer nav ul {
 #close:hover {
 	cursor:pointer;
 }
+.modal-works-container {
+	padding: 15px 70px;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	column-gap: 7px;
+	row-gap: 10px;
+}
+.modal-work {
+	position: relative;
+}
+.modal-work img {
+	width: 100%;
+}
+.delete-button {
+	background-color: black;
+	border-radius: 2px;
+	height: 17px;
+	width: 17px;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+}

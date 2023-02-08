@@ -1,7 +1,7 @@
 import { getWorks } from './works.js'
 import { getFilterCategories, appendFilterButtons, addFilterEventListeners } from './filter.js'
 import { logout } from './logout.js'
-import { createModalListeners } from './modal.js'
+import { createModalListeners, drawGallery } from './modal.js'
 import sharedData from './shared-data.js'
 
 console.log('test')
@@ -36,10 +36,11 @@ const checkAuth = () => {
   <div class="modal-controls-container">
   <span id="back">&leftarrow;</span>
   <span id="close">&times;</span>
-  <div class="modal-content-container"></div>
   </div>
+  <div class="modal-content-container"></div>
   </div></div>`
 
+  drawGallery()
   // add event listeners to display modal
   createModalListeners()
 }
