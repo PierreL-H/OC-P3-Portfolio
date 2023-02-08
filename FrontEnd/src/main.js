@@ -2,6 +2,7 @@ import { getWorks } from './works.js'
 import { getFilterCategories, appendFilterButtons, addFilterEventListeners } from './filter.js'
 import { logout } from './logout.js'
 import { createModalListeners } from './modal.js'
+import sharedData from './shared-data.js'
 
 console.log('test')
 
@@ -43,8 +44,9 @@ const checkAuth = () => {
   createModalListeners()
 }
 
-checkAuth()
 const works = await getWorks()
+sharedData.works = works
+checkAuth()
 // const categorySet = new Set()
 // for (const work of works) {
 //   const category = work.category

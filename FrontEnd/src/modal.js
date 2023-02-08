@@ -1,3 +1,5 @@
+import sharedData from './shared-data.js'
+
 export const createModalListeners = () => {
   const modal = document.querySelector('.modal')
   const editButton = document.querySelector('.gallery-edit-container')
