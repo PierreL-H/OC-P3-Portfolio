@@ -151,6 +151,34 @@ li:hover {
 	background-color: #1D6154;
 	color: white;
 }
+
+.heading-container {
+	text-align: center;
+}
+.heading-container h2 {
+	display: inline-block;
+	position: relative;
+}
+
+.gallery-edit-container {
+	position: absolute;
+	right: -6rem;
+	top: 0.5rem;
+	color: black;
+	font-size: 0.875rem;
+	font-family: 'Work Sans';
+	font-weight: 400;
+}
+.gallery-edit-container a {
+	text-decoration: none;
+	color: inherit
+}
+
+.gallery-edit-container a:visited,
+.gallery-edit-container a:hover,
+.gallery-edit-container a:active {
+	color: inherit
+}
 .gallery {
 	width: 100%;
 	display: grid;
@@ -229,4 +257,37 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	overflow: auto;
+}
+.modal-content {
+	width: 630px;
+	height: 700px;
+	margin: 5% auto;
+	padding: 30px;
+	background-color: #fff;
+	border-radius: 10px;
+}
+.modal-controls-container {
+	display: flex;
+	justify-content: space-around;
+	font-size: 1.5rem;
+}
+#back {
+	display: none;
+}
+#close {
+	margin-left: auto;
+}
+#close:hover {
+	cursor:pointer;
 }

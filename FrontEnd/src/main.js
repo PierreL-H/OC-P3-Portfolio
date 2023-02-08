@@ -1,6 +1,7 @@
 import { getWorks } from './works.js'
 import { getFilterCategories, appendFilterButtons, addFilterEventListeners } from './filter.js'
 import { logout } from './logout.js'
+import { createModalListeners } from './modal.js'
 
 console.log('test')
 
@@ -14,6 +15,32 @@ const checkAuth = () => {
 
   // call logout function
   logout()
+
+  // add edit button next to the heading
+  const heading = document.querySelector('.heading-container h2')
+  const divElement = document.createElement('div')
+  const linkElement = document.createElement('a')
+  linkElement.href = '#'
+  divElement.appendChild(linkElement)
+  linkElement.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>'
+  const spanElement = document.createElement('span')
+  spanElement.textContent = 'modifier'
+  linkElement.appendChild(spanElement)
+  divElement.classList = 'gallery-edit-container'
+  heading.appendChild(divElement)
+
+  // append modal divs to #portfolio
+  const portfolioElement = document.querySelector('#portfolio')
+  portfolioElement.innerHTML += `<div class="modal"><div class="modal-content">
+  <div class="modal-controls-container">
+  <span id="back">&leftarrow;</span>
+  <span id="close">&times;</span>
+  <div class="modal-content-container"></div>
+  </div>
+  </div></div>`
+
+  // add event listeners to display modal
+  createModalListeners()
 }
 
 checkAuth()
@@ -26,4 +53,3 @@ const works = await getWorks()
 const categories = getFilterCategories(works)
 appendFilterButtons(categories)
 addFilterEventListeners(works)
-console.log('token storage: ' ,window.sessionStorage.getItem('access_token'))
