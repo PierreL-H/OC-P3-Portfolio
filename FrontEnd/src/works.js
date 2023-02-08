@@ -12,7 +12,6 @@ export const appendWork = (work) => {
   const imgElement = document.createElement('img')
   const figcaptionElement = document.createElement('figcaption')
   imgElement.src = work.imageUrl
-  imgElement.crossOrigin = 'anonymous'
   imgElement.alt = work.title
   figcaptionElement.textContent = work.title
   figureElement.appendChild(imgElement)

@@ -1,3 +1,10 @@
+// Turn login link into logout if token is present
+// export const logout = () => {
+//   const linkElement = document.querySelector('nav a')
+//   console.log(linkElement)
+// }
+import { logout } from './logout.js'
+
 // Send login request to the api
 const sendLoginRequest = async (emailString, passwordString) => {
   const response = await fetch('http://localhost:5678/api/users/login', {
@@ -10,11 +17,12 @@ const sendLoginRequest = async (emailString, passwordString) => {
       password: passwordString
     })
   })
+
   const data = await response.json()
   console.log(data)
   // If token exists, save it to local storage and redirect to index.html
   if (data.token) {
-    window.localStorage.setItem('access_token', data.token)
+    window.sessionStorage.setItem('access_token', data.token)
     window.location.replace('./index.html')
   } else {
     const errorMessage = document.querySelector('.error')
@@ -24,6 +32,10 @@ const sendLoginRequest = async (emailString, passwordString) => {
   }
 }
 
+// check if user is authed, call logout if they are
+if (window.sessionStorage.getItem('access_token')) {
+  logout()
+}
 // Make event listener to get login credentials from form
 /** @type {HTMLFormElement} */
 const form = document.querySelector('#login form')
