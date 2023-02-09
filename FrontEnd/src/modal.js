@@ -1,6 +1,34 @@
 import sharedData from './shared-data.js'
 import { deleteWork } from './works.js'
 
+// handle form's file input's change event
+const handleInputChangeEvent = (event) => {
+  console.log(event)
+  const file = event.target.files[0]
+  const reader = new FileReader()
+  const img = document.querySelector('.form-image')
+  const innerContainer = document.querySelector('.inner-container')
+  reader.onload = e => {
+    console.log('reader: ', e)
+    img.src = e.target.result
+    console.log('img: ', img)
+    innerContainer.style.display = 'none'
+  }
+  reader.readAsDataURL(file)
+}
+
+// handle dropzone's drop event
+const handleDropzoneDropEvent = (event) => {
+  event.preventDefault()
+  const file = event.dataTransfer.files[0]
+  const fileInput = document.getElementById('image-upload')
+  if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    console.log('file: ', file)
+    fileInput.files = event.dataTransfer.files
+    fileInput.dispatchEvent(new Event('change'))
+  }
+}
+
 // draw gallery window
 export const drawGallery = () => {
   const container = document.querySelector('.modal-content-container')
@@ -92,14 +120,6 @@ const drawAddWindow = () => {
   dropzone.appendChild(innerContainer)
   dropzone.appendChild(img)
   form.appendChild(dropzone)
-  // form.innerHTML +=
-  // `<label for="title">Titre</label>
-  // <input name="title">
-  // <label for="category">Catégorie</label>
-  // <input name="category">
-  // <div class="separator">
-  // <button class="modal-button" id="submit-button">Valider</button>
-  // </div>`
 
   const titleLabel = document.createElement('label')
   titleLabel.for = 'title'
@@ -128,33 +148,23 @@ const drawAddWindow = () => {
 
   // add event listener to input to read file on change
   const fileInput = document.querySelector('#image-upload')
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0]
-    const reader = new FileReader()
-
-    reader.onload = e => {
-      console.log('reader: ', e)
-      img.src = e.target.result
-      console.log('img: ', img)
-      innerContainer.style.display = 'none'
-    }
-    reader.readAsDataURL(file)
-  })
+  fileInput.addEventListener('change', handleInputChangeEvent)
 
   // add event listener to drop zone to update input with image
   dropzone.addEventListener('dragover', e => {
     e.preventDefault()
   })
 
-  dropzone.addEventListener('drop', e => {
-    e.preventDefault()
-    const file = e.dataTransfer.files[0]
-    if (file.type === 'image/jpeg' || file.type === 'image/png') {
-      console.log('file: ', file)
-      fileInput.files = e.dataTransfer.files
-      fileInput.dispatchEvent(new Event('change'))
-    }
-  })
+  dropzone.addEventListener('drop', handleDropzoneDropEvent)
+  // {
+  //   e.preventDefault()
+  //   const file = e.dataTransfer.files[0]
+  //   if (file.type === 'image/jpeg' || file.type === 'image/png') {
+  //     console.log('file: ', file)
+  //     fileInput.files = e.dataTransfer.files
+  //     fileInput.dispatchEvent(new Event('change'))
+  //   }
+  // })
 
   // add form button event listener to get form data
   submitButton.addEventListener('click', async e => {
