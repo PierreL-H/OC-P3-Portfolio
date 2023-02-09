@@ -15,7 +15,7 @@ export const drawGallery = () => {
 
   // append works in container
   for (const work of sharedData.works) {
-    console.log(work)
+    // console.log(work)
     const modalWork = document.createElement('div')
     modalWork.classList = 'modal-work'
     const img = document.createElement('img')
@@ -25,7 +25,7 @@ export const drawGallery = () => {
     const deleteButton = document.createElement('div')
     deleteButton.classList = 'delete-button'
     deleteButton.dataset.id = work.id
-    console.log('id: ', work.id)
+    // console.log('id: ', work.id)
     deleteButton.innerHTML = '<i class="fa-solid fa-trash-can fa-2xs"></i>'
     modalWork.appendChild(img)
     modalWork.appendChild(edit)
@@ -57,12 +57,136 @@ export const drawGallery = () => {
   addButton.classList = 'modal-button'
   addButton.textContent = 'Ajouter une photo'
   separator.appendChild(addButton)
+  addButton.addEventListener('click', e => {
+    e.preventDefault()
+    drawAddWindow()
+  })
 }
 
+// draw add photo window
+const drawAddWindow = () => {
+  const backButton = document.getElementById('back')
+  backButton.style.display = 'inline'
+  const container = document.querySelector('.modal-content-container')
+  container.innerHTML = ''
+  const heading = document.createElement('h2')
+  heading.textContent = 'Galerie photo'
+  container.appendChild(heading)
+
+  const form = document.createElement('form')
+  form.name = 'photo'
+  form.classList = 'photo-form'
+  const dropzone = document.createElement('div')
+  dropzone.classList = 'dropzone'
+  const innerContainer = document.createElement('div')
+  innerContainer.classList = 'inner-container'
+  const img = document.createElement('img')
+  img.classList = 'form-image'
+  innerContainer.innerHTML =
+  `<i class="fa-regular fa-image"></i>
+  <label for="image-upload" class="custom-file-upload">
+  + Ajouter photo
+  </label>
+  <input type="file" id="image-upload" name="image" accept="image/png,image/jpeg"></input>
+  <p>jpg, png: 4mo max</p>`
+  dropzone.appendChild(innerContainer)
+  dropzone.appendChild(img)
+  form.appendChild(dropzone)
+  // form.innerHTML +=
+  // `<label for="title">Titre</label>
+  // <input name="title">
+  // <label for="category">Catégorie</label>
+  // <input name="category">
+  // <div class="separator">
+  // <button class="modal-button" id="submit-button">Valider</button>
+  // </div>`
+
+  const titleLabel = document.createElement('label')
+  titleLabel.for = 'title'
+  titleLabel.textContent = 'Titre'
+  const titleInput = document.createElement('input')
+  titleInput.name = 'title'
+  const categoryLabel = document.createElement('label')
+  categoryLabel.for = 'category'
+  categoryLabel.textContent = 'Catégories'
+  const categoryInput = document.createElement('input')
+  categoryInput.name = 'category'
+  const separator = document.createElement('div')
+  separator.classList = 'separator'
+  const submitButton = document.createElement('button')
+  submitButton.classList = 'modal-button'
+  submitButton.id = 'submit-button'
+  submitButton.textContent = 'Valider'
+
+  form.appendChild(titleLabel)
+  form.appendChild(titleInput)
+  form.appendChild(categoryLabel)
+  form.appendChild(categoryInput)
+  separator.appendChild(submitButton)
+  form.appendChild(separator)
+  container.appendChild(form)
+
+  // add event listener to input to read file on change
+  const fileInput = document.querySelector('#image-upload')
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0]
+    const reader = new FileReader()
+
+    reader.onload = e => {
+      console.log('reader: ', e)
+      img.src = e.target.result
+      console.log('img: ', img)
+      innerContainer.style.display = 'none'
+    }
+    reader.readAsDataURL(file)
+  })
+
+  // add event listener to drop zone to update input with image
+  dropzone.addEventListener('dragover', e => {
+    e.preventDefault()
+  })
+
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      console.log('file: ', file)
+      fileInput.files = e.dataTransfer.files
+      fileInput.dispatchEvent(new Event('change'))
+    }
+  })
+
+  // add form button event listener to get form data
+  submitButton.addEventListener('click', async e => {
+    e.preventDefault()
+    const formData = new FormData(form)
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1])
+    }
+    console.log('image: ', formData.get('image'))
+    console.log('title: ', formData.get('title'))
+    const fileString = formData.get('image').name + ';' + formData.get('image').type
+    console.log(fileString)
+    // formData.set('image', fileString)
+    const response = await fetch('http://localhost:5678/api/works', {
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${window.sessionStorage.getItem('access_token')}`
+      },
+      body: formData
+    })
+    console.log(response)
+    const parsedResponse = await response.json()
+    console.log(parsedResponse)
+  })
+}
+
+// add event listeners to display the modal
 export const createModalListeners = () => {
   const modal = document.querySelector('.modal')
   const editButton = document.querySelector('.gallery-edit-container')
   const closeButton = document.getElementById('close')
+  const backButton = document.getElementById('back')
   // listener on the edit button to open the modal
   editButton.addEventListener('click', e => {
     e.preventDefault()
@@ -81,5 +205,10 @@ export const createModalListeners = () => {
   // listener on the close button to close the modal
   closeButton.addEventListener('click', () => {
     modal.style.display = 'none'
+  })
+
+  backButton.addEventListener('click', () => {
+    drawGallery()
+    backButton.style.display = 'none'
   })
 }

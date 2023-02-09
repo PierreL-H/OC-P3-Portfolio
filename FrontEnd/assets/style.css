@@ -329,3 +329,41 @@ footer nav ul {
 .modal-button {
 	border-radius: 60px;
 }
+.photo-form {
+	width: 420px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+}
+.dropzone {
+	height: 170px;
+	background-color: #E8F1F7;
+	border-radius: 3px;
+	text-align: center;
+}
+.inner-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;	
+	justify-content: center;
+	height: 100%;
+	gap: 5px;
+}
+.inner-container i {
+	font-size: 3rem;
+}
+.custom-file-upload {
+	background-color: #CBD6DC;
+	width: 170px;
+	border-radius: 50px;
+	text-align: center;
+	vertical-align: center;
+	padding: 10px 0
+}
+.form-image {
+	height: 100%;
+	object-fit: contain;
+}
+input[type="file"] {
+	display: none;
+}
