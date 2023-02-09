@@ -317,3 +317,15 @@ footer nav ul {
 	justify-content: center;
 	color: white;
 }
+
+.separator {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100px;
+	margin-top: 50px;	
+	border-top: 1px solid #bebebe;
+}
+.modal-button {
+	border-radius: 60px;
+}

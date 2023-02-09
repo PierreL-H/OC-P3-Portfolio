@@ -4,6 +4,7 @@ import { deleteWork } from './works.js'
 // draw gallery window
 export const drawGallery = () => {
   const container = document.querySelector('.modal-content-container')
+  container.innerHTML = ''
   const heading = document.createElement('h2')
   heading.textContent = 'Galerie photo'
   container.appendChild(heading)
@@ -33,7 +34,8 @@ export const drawGallery = () => {
 
     // add event listener on delete button and retrieve work id
     deleteButton.addEventListener('click', async e => {
-      const dataId = e.target.closest('div').dataset.id
+      const dataString = e.target.closest('div').dataset.id
+      const dataId = parseInt(dataString)
       if (confirm(`Voulez-vous vraiment supprimer le travail ${dataId}`)) {
         const response = await deleteWork(dataId)
 
@@ -42,11 +44,19 @@ export const drawGallery = () => {
           e.target.closest('.modal-work').remove()
           const figure = document.querySelectorAll('[data-id~="' + dataId + '"]')
           figure[0].remove()
+          sharedData.works = sharedData.works.filter(item => item.id !== dataId)
         }
       }
     })
   }
   container.appendChild(worksContainer)
+  const separator = document.createElement('div')
+  separator.classList = 'separator'
+  container.appendChild(separator)
+  const addButton = document.createElement('button')
+  addButton.classList = 'modal-button'
+  addButton.textContent = 'Ajouter une photo'
+  separator.appendChild(addButton)
 }
 
 export const createModalListeners = () => {
@@ -56,6 +66,7 @@ export const createModalListeners = () => {
   // listener on the edit button to open the modal
   editButton.addEventListener('click', e => {
     e.preventDefault()
+    drawGallery()
     console.log('inside button')
     modal.style.display = 'block'
   })
