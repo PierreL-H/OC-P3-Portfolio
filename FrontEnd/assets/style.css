@@ -147,7 +147,7 @@ li:hover {
 	background-color: white;
 	color: #1D6154;
 }
-.filters > button:first-child {
+.filters > button.active {
 	background-color: #1D6154;
 	color: white;
 }

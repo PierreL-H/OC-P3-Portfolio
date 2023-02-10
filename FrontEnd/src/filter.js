@@ -31,6 +31,8 @@ export const appendFilterButtons = (categories) => {
     button.textContent = category
     filtersDiv.appendChild(button)
   }
+  // add active class to reset button
+  document.querySelectorAll('.filters > button')[0].classList.add('active')
 }
 
 // Add event listener for each filter button
@@ -39,7 +41,19 @@ export const addFilterEventListeners = (works) => {
   const buttons = document.querySelectorAll('.filter-button-category')
   const gallery = document.querySelector('.gallery')
 
-  resetButton.addEventListener('click', () => {
+  resetButton.addEventListener('click', e => {
+    // if already active, do nothing
+    if (e.target.classList.contains('active')) {
+      return
+    }
+
+    // remove active class from other buttons and add it to reset button
+    for (const button of buttons) {
+      button.classList.remove('active')
+    }
+    e.target.classList.add('active')
+
+    // display all ways
     gallery.innerHTML = ''
     for (const work of sharedData.works) {
       appendWork(work)
@@ -47,7 +61,20 @@ export const addFilterEventListeners = (works) => {
   })
 
   for (const button of buttons) {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', e => {
+      // check if clicked button is already active, return if true
+      if (e.target.classList.contains('active')) {
+        return
+      }
+
+      // remove active class from all buttons and set clicked button to active
+      resetButton.classList.remove('active')
+      for (const button of buttons) {
+        button.classList.remove('active')
+      }
+      e.target.classList.add('active')
+
+      // filter the list of works, store it in filteredList and display it
       const filteredList = sharedData.works.filter((work) => work.category.name === button.dataset.filter)
       gallery.innerHTML = ''
       for (const work of filteredList) {
