@@ -29,6 +29,67 @@ const handleDropzoneDropEvent = (event) => {
   }
 }
 
+// flash error message
+const flashMessage = (messageElement, message) => {
+  messageElement.textContent = message
+  messageElement.style.display = 'block'
+  setTimeout(() => {
+    messageElement.style.display = 'none'
+    messageElement.textContent = ''
+  }, 5000)
+}
+
+// handle submit button click event
+const handleFormSubmitEvent = async (event) => {
+  const messageElement = event.target.lastChild
+  let json
+  event.preventDefault()
+  let response
+  const formData = new FormData(event.target)
+
+  try {
+    response = await fetch('http://localhost:5678/api/works', {
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${window.sessionStorage.getItem('access_token')}`
+      },
+      body: formData
+    })
+    console.log(response)
+  } catch (error) {
+    console.log('error', error)
+  }
+
+  // if (response?.ok) {
+  //   // do stuff with the response here
+  //   console.log(response)
+  //   const json = await response.json()
+  //   console.log(json)
+  // } else {
+  //   console.log('HTTP response code: ', response.status)
+  // }
+  switch (response?.status) {
+    case 201:
+      // do stuff with response here
+      console.log(response)
+      json = await response.json()
+      console.log(json)
+      break
+    case 400:
+      flashMessage(messageElement, 'Requête invalide')
+      break
+    case 401:
+      flashMessage(messageElement, 'Non authorisé')
+      break
+    case 500:
+      flashMessage(messageElement, 'Erreur innatendue')
+      break
+    default:
+      flashMessage(messageElement, 'Erreur inconnue')
+      break
+  }
+}
+
 // draw gallery window
 export const drawGallery = () => {
   const container = document.querySelector('.modal-content-container')
@@ -104,6 +165,7 @@ const drawAddWindow = () => {
   const form = document.createElement('form')
   form.name = 'photo'
   form.classList = 'photo-form'
+  form.action = '#'
   const dropzone = document.createElement('div')
   dropzone.classList = 'dropzone'
   const innerContainer = document.createElement('div')
@@ -114,8 +176,8 @@ const drawAddWindow = () => {
   `<i class="fa-regular fa-image"></i>
   <label for="image-upload" class="custom-file-upload">
   + Ajouter photo
+  <input type="file" id="image-upload" name="image" accept="image/png,image/jpeg" required></input>
   </label>
-  <input type="file" id="image-upload" name="image" accept="image/png,image/jpeg"></input>
   <p>jpg, png: 4mo max</p>`
   dropzone.appendChild(innerContainer)
   dropzone.appendChild(img)
@@ -126,14 +188,17 @@ const drawAddWindow = () => {
   titleLabel.textContent = 'Titre'
   const titleInput = document.createElement('input')
   titleInput.name = 'title'
+  titleInput.required = true
   const categoryLabel = document.createElement('label')
   categoryLabel.for = 'category'
   categoryLabel.textContent = 'Catégories'
   const categoryInput = document.createElement('input')
   categoryInput.name = 'category'
+  categoryInput.required = true
   const separator = document.createElement('div')
   separator.classList = 'separator'
   const submitButton = document.createElement('button')
+  submitButton.type = 'submit'
   submitButton.classList = 'modal-button'
   submitButton.id = 'submit-button'
   submitButton.textContent = 'Valider'
@@ -145,6 +210,10 @@ const drawAddWindow = () => {
   separator.appendChild(submitButton)
   form.appendChild(separator)
   container.appendChild(form)
+  const responseMessage = document.createElement('p')
+  responseMessage.style.display = 'none'
+  responseMessage.style.color = 'red'
+  form.appendChild(responseMessage)
 
   // add event listener to input to read file on change
   const fileInput = document.querySelector('#image-upload')
@@ -156,39 +225,9 @@ const drawAddWindow = () => {
   })
 
   dropzone.addEventListener('drop', handleDropzoneDropEvent)
-  // {
-  //   e.preventDefault()
-  //   const file = e.dataTransfer.files[0]
-  //   if (file.type === 'image/jpeg' || file.type === 'image/png') {
-  //     console.log('file: ', file)
-  //     fileInput.files = e.dataTransfer.files
-  //     fileInput.dispatchEvent(new Event('change'))
-  //   }
-  // })
 
   // add form button event listener to get form data
-  submitButton.addEventListener('click', async e => {
-    e.preventDefault()
-    const formData = new FormData(form)
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1])
-    }
-    console.log('image: ', formData.get('image'))
-    console.log('title: ', formData.get('title'))
-    const fileString = formData.get('image').name + ';' + formData.get('image').type
-    console.log(fileString)
-    // formData.set('image', fileString)
-    const response = await fetch('http://localhost:5678/api/works', {
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${window.sessionStorage.getItem('access_token')}`
-      },
-      body: formData
-    })
-    console.log(response)
-    const parsedResponse = await response.json()
-    console.log(parsedResponse)
-  })
+  form.addEventListener('submit', handleFormSubmitEvent)
 }
 
 // add event listeners to display the modal
