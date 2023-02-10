@@ -1,5 +1,5 @@
 import sharedData from './shared-data.js'
-import { deleteWork } from './works.js'
+import { appendWork, deleteWork } from './works.js'
 
 // handle form's file input's change event
 const handleInputChangeEvent = (event) => {
@@ -42,7 +42,6 @@ const flashMessage = (messageElement, message) => {
 // handle submit button click event
 const handleFormSubmitEvent = async (event) => {
   const messageElement = event.target.lastChild
-  let json
   event.preventDefault()
   let response
   const formData = new FormData(event.target)
@@ -68,21 +67,33 @@ const handleFormSubmitEvent = async (event) => {
     console.log('error', error)
   }
 
-  // if (response?.ok) {
-  //   // do stuff with the response here
-  //   console.log(response)
-  //   const json = await response.json()
-  //   console.log(json)
-  // } else {
-  //   console.log('HTTP response code: ', response.status)
-  // }
+  if (response?.ok) {
+    // do stuff with the response here
+    const json = await response.json()
+    // add category object and append it to the response json
+    const categoryObj = {
+      id: parseInt(json.categoryId),
+      name: categoryName
+    }
+    json.category = categoryObj
+    json.categoryId = parseInt(json.categoryId)
+    sharedData.works.push(json)
+
+    // reset displayed works
+    document.querySelector('.gallery').innerHTML = ''
+    for (const work of sharedData.works) {
+      appendWork(work)
+    }
+
+    // return to the previous screen
+    drawGallery()
+    return
+  }
+
+  // reset form if upload was not successful
+  event.target.reset()
+  console.log('after if')
   switch (response?.status) {
-    case 201:
-      // do stuff with response here
-      console.log(response)
-      json = await response.json()
-      console.log(json)
-      break
     case 400:
       flashMessage(messageElement, 'Requête invalide')
       break
@@ -197,7 +208,7 @@ const drawAddWindow = () => {
   `<i class="fa-regular fa-image"></i>
   <label for="image-upload" class="custom-file-upload">
   + Ajouter photo
-  <input type="file" id="image-upload" name="image" accept="image/png,image/jpeg" required></input>
+  <input type="file" id="image-upload" name="image" accept="image/png,image/jpeg"></input>
   </label>
   <p>jpg, png: 4mo max</p>`
   dropzone.appendChild(innerContainer)
