@@ -52,6 +52,6 @@ checkAuth()
 //   const category = work.category
 //   categorySet.add(category.name)
 // }
-const categories = getFilterCategories(works)
+const categories = await getFilterCategories(works)
 appendFilterButtons(categories)
 addFilterEventListeners(works)

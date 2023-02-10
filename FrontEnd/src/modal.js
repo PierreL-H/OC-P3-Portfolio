@@ -47,6 +47,14 @@ const handleFormSubmitEvent = async (event) => {
   let response
   const formData = new FormData(event.target)
 
+  // get category Id from name
+  const categoryName = formData.get('category')
+  const category = sharedData.categories.find(obj => obj.name === categoryName)
+  formData.set('category', category.id)
+  formData.forEach((value, key) => {
+    console.log('formdata content: ', key, value)
+  })
+
   try {
     response = await fetch('http://localhost:5678/api/works', {
       method: 'post',
@@ -88,6 +96,19 @@ const handleFormSubmitEvent = async (event) => {
       flashMessage(messageElement, 'Erreur inconnue')
       break
   }
+}
+
+// create category drop down list
+const createCategorySelect = () => {
+  const select = document.createElement('select')
+  select.name = 'category'
+  for (const category of sharedData.categoryNames) {
+    const option = document.createElement('option')
+    option.value = category
+    option.textContent = category
+    select.appendChild(option)
+  }
+  return select
 }
 
 // draw gallery window
@@ -132,8 +153,8 @@ export const drawGallery = () => {
         if (response.status === 204) {
           e.target.closest('.modal-work').remove()
           const figure = document.querySelectorAll('[data-id~="' + dataId + '"]')
-          figure[0].remove()
           sharedData.works = sharedData.works.filter(item => item.id !== dataId)
+          figure[0]?.remove()
         }
       }
     })
@@ -192,9 +213,10 @@ const drawAddWindow = () => {
   const categoryLabel = document.createElement('label')
   categoryLabel.for = 'category'
   categoryLabel.textContent = 'Catégories'
-  const categoryInput = document.createElement('input')
-  categoryInput.name = 'category'
-  categoryInput.required = true
+  // const categoryInput = document.createElement('input')
+  // categoryInput.name = 'category'
+  // categoryInput.required = true
+  const categoryInput = createCategorySelect()
   const separator = document.createElement('div')
   separator.classList = 'separator'
   const submitButton = document.createElement('button')

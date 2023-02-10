@@ -1,12 +1,23 @@
+import sharedData from './shared-data.js'
 import { appendWork } from './works.js'
 
 // Get category names from works and put them in a Set
-export const getFilterCategories = (works) => {
+export const getFilterCategories = async (works) => {
   const categories = new Set()
-  for (const work of works) {
-    const category = work.category
+  // for (const work of works) {
+  //   const category = work.category
+  //   categories.add(category.name)
+  // }
+  const response = await fetch('http://localhost:5678/api/categories')
+  const json = await response.json()
+  console.log('categories: ', json)
+  for (const category of json) {
     categories.add(category.name)
   }
+  sharedData.categoryNames = categories
+  sharedData.categories = json
+  console.log('set: ', categories)
+  console.log('category array: ', sharedData.categories)
   return categories
 }
 
@@ -30,14 +41,14 @@ export const addFilterEventListeners = (works) => {
 
   resetButton.addEventListener('click', () => {
     gallery.innerHTML = ''
-    for (const work of works) {
+    for (const work of sharedData.works) {
       appendWork(work)
     }
   })
 
   for (const button of buttons) {
     button.addEventListener('click', () => {
-      const filteredList = works.filter((work) => work.category.name === button.dataset.filter)
+      const filteredList = sharedData.works.filter((work) => work.category.name === button.dataset.filter)
       gallery.innerHTML = ''
       for (const work of filteredList) {
         appendWork(work)
