@@ -80,9 +80,27 @@ const handleFormSubmitEvent = async (event) => {
     sharedData.works.push(json)
 
     // reset displayed works
-    document.querySelector('.gallery').innerHTML = ''
-    for (const work of sharedData.works) {
-      appendWork(work)
+    // document.querySelector('.gallery').innerHTML = ''
+    // for (const work of sharedData.works) {
+    //   appendWork(work)
+    // }
+
+    // check which filter is active
+    if (document.querySelector('.filter-button-all').classList.contains('active')) {
+      // do stuff here
+      appendWork(json)
+    } else {
+      const buttons = document.querySelectorAll('.filter-button-category')
+      let filterCategory = ''
+      for (const button of buttons) {
+        if (button.classList.contains('active')) {
+          filterCategory = button.dataset.filter
+          break
+        }
+      }
+      if (categoryName === filterCategory) {
+        appendWork(json)
+      }
     }
 
     // return to the previous screen
