@@ -2,7 +2,7 @@ import sharedData from './shared-data.js'
 import { appendWork } from './works.js'
 
 // Get category names from works and put them in a Set
-export const getFilterCategories = async (works) => {
+export const getFilterCategories = async () => {
   const categories = new Set()
   // for (const work of works) {
   //   const category = work.category
