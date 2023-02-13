@@ -149,6 +149,8 @@ export const drawGallery = () => {
   const heading = document.createElement('h2')
   heading.textContent = 'Galerie photo'
   container.appendChild(heading)
+  // hide back button
+  document.querySelector('#back').style.display = 'none'
 
   // create container for works
   const worksContainer = document.createElement('div')
@@ -311,6 +313,5 @@ export const createModalListeners = () => {
 
   backButton.addEventListener('click', () => {
     drawGallery()
-    backButton.style.display = 'none'
   })
 }
