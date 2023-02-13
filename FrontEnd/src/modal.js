@@ -213,7 +213,7 @@ const drawAddWindow = () => {
   const container = document.querySelector('.modal-content-container')
   container.innerHTML = ''
   const heading = document.createElement('h2')
-  heading.textContent = 'Galerie photo'
+  heading.textContent = 'Ajout photo'
   container.appendChild(heading)
 
   const form = document.createElement('form')
