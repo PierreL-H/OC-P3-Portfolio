@@ -370,6 +370,15 @@ footer nav ul {
 }
 .inner-container i {
 	font-size: 3rem;
+	color: #B9C5CC;
+}
+.inner-container label.custom-file-upload {
+	margin-bottom: 2px;
+	color: #306685;
+}
+.inner-container p {
+	color: #444444;
+	font-size: 10px;
 }
 .custom-file-upload {
 	background-color: #CBD6DC;
@@ -400,4 +409,5 @@ input[type="file"] {
 	font-family: 'Work Sans';
 	font-size: 14px;
 	padding: 0 16px;
+	background-color: white;
 }
