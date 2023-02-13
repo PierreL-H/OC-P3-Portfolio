@@ -271,11 +271,17 @@ footer nav ul {
 }
 .modal-content {
 	width: 630px;
-	height: 700px;
 	margin: 5% auto;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 10px;
+}
+.modal-content h2 {
+	color: black;
+	font-family: 'Work Sans';
+	font-size: 26px;	
+	font-weight: 400;
+	margin-top: 16px;
 }
 .modal-controls-container {
 	display: flex;
@@ -327,7 +333,15 @@ footer nav ul {
 	border-top: 1px solid #bebebe;
 }
 .modal-button {
+	border: none;
+	color: white;
+	font-family: 'Syne';
+	font-size: 14px;
+	font-weight: 700;
 	border-radius: 60px;
+	background-color: #1D6154;
+	width: 237px;
+	padding: 10px 0;
 }
 .photo-form {
 	width: 420px;
@@ -338,6 +352,7 @@ footer nav ul {
 .dropzone {
 	height: 170px;
 	background-color: #E8F1F7;
+	margin-bottom: 10px;
 	border-radius: 3px;
 	text-align: center;
 }
@@ -366,4 +381,19 @@ footer nav ul {
 }
 input[type="file"] {
 	display: none;
+}
+.photo-form label {
+	font-family: 'Work Sans';
+	font-weight: 500;
+	font-size: 14px;
+	margin: 20px 0 10px 0;
+}
+.photo-form > input,
+.photo-form > select {
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	height: 50px;
+	border: none;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	padding: 0 16px;
 }
