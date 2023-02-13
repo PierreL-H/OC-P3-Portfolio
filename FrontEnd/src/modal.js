@@ -39,17 +39,18 @@ const flashMessage = (messageElement, message) => {
   }, 5000)
 }
 
-// handle submit button click event
+// handle form's submit event
 const handleFormSubmitEvent = async (event) => {
-  const messageElement = event.target.lastChild
   event.preventDefault()
+  const messageElement = event.target.lastChild
   let response
+  // get form data from the form
   const formData = new FormData(event.target)
 
   // get category Id from name
-  const categoryName = formData.get('category')
-  const category = sharedData.categories.find(obj => obj.name === categoryName)
-  formData.set('category', category.id)
+  // const categoryName = formData.get('category')
+  // const category = sharedData.categories.find(obj => obj.name === categoryName)
+  // formData.set('category', category.id)
   formData.forEach((value, key) => {
     console.log('formdata content: ', key, value)
   })
@@ -70,7 +71,11 @@ const handleFormSubmitEvent = async (event) => {
   if (response?.ok) {
     // do stuff with the response here
     const json = await response.json()
-    // add category object and append it to the response json
+    // get category that matches the selected category from list of categories
+    const category = sharedData.categories.find(obj => obj.id === parseInt(formData.get('category')))
+    // get category's name
+    const categoryName = category.name
+    // create category object and append it to the response json
     const categoryObj = {
       id: parseInt(json.categoryId),
       name: categoryName
@@ -79,20 +84,17 @@ const handleFormSubmitEvent = async (event) => {
     json.categoryId = parseInt(json.categoryId)
     sharedData.works.push(json)
 
-    // reset displayed works
-    // document.querySelector('.gallery').innerHTML = ''
-    // for (const work of sharedData.works) {
-    //   appendWork(work)
-    // }
-
     // check which filter is active
     if (document.querySelector('.filter-button-all').classList.contains('active')) {
-      // do stuff here
+      // if 'all' is selected, append the new work
       appendWork(json)
     } else {
+      // else, check which filter is selected and add work if it matches
       const buttons = document.querySelectorAll('.filter-button-category')
       let filterCategory = ''
+      // iterate through button list
       for (const button of buttons) {
+        // if button is active, get the category and break out of the loop
         if (button.classList.contains('active')) {
           filterCategory = button.dataset.filter
           break
@@ -131,10 +133,10 @@ const handleFormSubmitEvent = async (event) => {
 const createCategorySelect = () => {
   const select = document.createElement('select')
   select.name = 'category'
-  for (const category of sharedData.categoryNames) {
+  for (const category of sharedData.categories) {
     const option = document.createElement('option')
-    option.value = category
-    option.textContent = category
+    option.value = category.id
+    option.textContent = category.name
     select.appendChild(option)
   }
   return select
