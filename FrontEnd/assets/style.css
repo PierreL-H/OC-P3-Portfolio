@@ -347,6 +347,9 @@ footer nav ul {
 	width: 237px;
 	padding: 10px 0;
 }
+.invalid {
+	background-color: #A7A7A7;
+}
 .photo-form {
 	width: 420px;
 	margin: auto;
@@ -382,6 +385,7 @@ footer nav ul {
 }
 .custom-file-upload {
 	background-color: #CBD6DC;
+	position: relative;
 	width: 170px;
 	border-radius: 50px;
 	text-align: center;
@@ -393,7 +397,10 @@ footer nav ul {
 	object-fit: contain;
 }
 input[type="file"] {
-	display: none;
+	visibility: hidden;
+	position: absolute;
+	bottom: 0;
+	left: 0;
 }
 .photo-form label {
 	font-family: 'Work Sans';

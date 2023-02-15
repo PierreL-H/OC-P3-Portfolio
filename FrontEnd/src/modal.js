@@ -2,9 +2,19 @@ import sharedData from './shared-data.js'
 import { appendWork, deleteWork } from './works.js'
 
 // handle form's file input's change event
-const handleInputChangeEvent = (event) => {
-  console.log(event)
+const handleImageInputChangeEvent = (event) => {
   const file = event.target.files[0]
+  const titleInput = document.querySelector('input[name="title"]')
+  const submitButton = document.querySelector('#submit-button')
+  // check if image format is valid
+  if (!(file.type === 'image/jpeg' || file.type === 'image/png')) {
+    event.target.value = ''
+    event.target.setCustomValidity("L'image doit être au format jpeg ou png")
+    event.target.reportValidity()
+    return
+  }
+
+  // read image and display it
   const reader = new FileReader()
   const img = document.querySelector('.form-image')
   const innerContainer = document.querySelector('.inner-container')
@@ -15,6 +25,9 @@ const handleInputChangeEvent = (event) => {
     innerContainer.style.display = 'none'
   }
   reader.readAsDataURL(file)
+
+  // check if title input is not empty
+  titleInput.value && submitButton.classList.remove('invalid')
 }
 
 // handle dropzone's drop event
@@ -127,6 +140,16 @@ const handleFormSubmitEvent = async (event) => {
       flashMessage(messageElement, 'Erreur inconnue')
       break
   }
+}
+
+// handle inputs' change events and check if input is valid
+const handleInputInputEvent = e => {
+  const imageInput = document.querySelector('#image-upload')
+  if (!imageInput.value) return
+  console.log('there is an image')
+
+  const submitButtonClasses = document.querySelector('#submit-button').classList
+  e.target.value ? submitButtonClasses.remove('invalid') : submitButtonClasses.add('invalid')
 }
 
 // create category drop down list
@@ -254,7 +277,7 @@ const drawAddWindow = () => {
   separator.classList = 'separator'
   const submitButton = document.createElement('button')
   submitButton.type = 'submit'
-  submitButton.classList = 'modal-button'
+  submitButton.classList = 'modal-button invalid'
   submitButton.id = 'submit-button'
   submitButton.textContent = 'Valider'
 
@@ -272,17 +295,19 @@ const drawAddWindow = () => {
 
   // add event listener to input to read file on change
   const fileInput = document.querySelector('#image-upload')
-  fileInput.addEventListener('change', handleInputChangeEvent)
+  fileInput.addEventListener('change', handleImageInputChangeEvent)
 
   // add event listener to drop zone to update input with image
   dropzone.addEventListener('dragover', e => {
     e.preventDefault()
   })
-
   dropzone.addEventListener('drop', handleDropzoneDropEvent)
 
   // add form button event listener to get form data
   form.addEventListener('submit', handleFormSubmitEvent)
+
+  // form event listener to change button's style on change
+  titleInput.addEventListener('input', handleInputInputEvent)
 }
 
 // add event listeners to display the modal
