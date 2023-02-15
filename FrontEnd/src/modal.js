@@ -19,9 +19,7 @@ const handleImageInputChangeEvent = (event) => {
   const img = document.querySelector('.form-image')
   const innerContainer = document.querySelector('.inner-container')
   reader.onload = e => {
-    console.log('reader: ', e)
     img.src = e.target.result
-    console.log('img: ', img)
     innerContainer.style.display = 'none'
   }
   reader.readAsDataURL(file)
@@ -33,13 +31,9 @@ const handleImageInputChangeEvent = (event) => {
 // handle dropzone's drop event
 const handleDropzoneDropEvent = (event) => {
   event.preventDefault()
-  const file = event.dataTransfer.files[0]
   const fileInput = document.getElementById('image-upload')
-  if (file.type === 'image/jpeg' || file.type === 'image/png') {
-    console.log('file: ', file)
-    fileInput.files = event.dataTransfer.files
-    fileInput.dispatchEvent(new Event('change'))
-  }
+  fileInput.files = event.dataTransfer.files
+  fileInput.dispatchEvent(new Event('change'))
 }
 
 // flash error message
@@ -60,14 +54,6 @@ const handleFormSubmitEvent = async (event) => {
   // get form data from the form
   const formData = new FormData(event.target)
 
-  // get category Id from name
-  // const categoryName = formData.get('category')
-  // const category = sharedData.categories.find(obj => obj.name === categoryName)
-  // formData.set('category', category.id)
-  formData.forEach((value, key) => {
-    console.log('formdata content: ', key, value)
-  })
-
   try {
     response = await fetch('http://localhost:5678/api/works', {
       method: 'post',
@@ -76,9 +62,7 @@ const handleFormSubmitEvent = async (event) => {
       },
       body: formData
     })
-    console.log(response)
   } catch (error) {
-    console.log('error', error)
   }
 
   if (response?.ok) {
@@ -125,7 +109,6 @@ const handleFormSubmitEvent = async (event) => {
 
   // reset form if upload was not successful
   event.target.reset()
-  console.log('after if')
   switch (response?.status) {
     case 400:
       flashMessage(messageElement, 'Requête invalide')
@@ -146,7 +129,6 @@ const handleFormSubmitEvent = async (event) => {
 const handleInputInputEvent = e => {
   const imageInput = document.querySelector('#image-upload')
   if (!imageInput.value) return
-  console.log('there is an image')
 
   const submitButtonClasses = document.querySelector('#submit-button').classList
   e.target.value ? submitButtonClasses.remove('invalid') : submitButtonClasses.add('invalid')
@@ -181,7 +163,6 @@ export const drawGallery = () => {
 
   // append works in container
   for (const work of sharedData.works) {
-    // console.log(work)
     const modalWork = document.createElement('div')
     modalWork.classList = 'modal-work'
     const img = document.createElement('img')
@@ -191,7 +172,6 @@ export const drawGallery = () => {
     const deleteButton = document.createElement('div')
     deleteButton.classList = 'delete-button'
     deleteButton.dataset.id = work.id
-    // console.log('id: ', work.id)
     deleteButton.innerHTML = '<i class="fa-solid fa-trash-can fa-2xs"></i>'
     modalWork.appendChild(img)
     modalWork.appendChild(edit)
@@ -320,7 +300,6 @@ export const createModalListeners = () => {
   editButton.addEventListener('click', e => {
     e.preventDefault()
     drawGallery()
-    console.log('inside button')
     modal.style.display = 'block'
   })
 
