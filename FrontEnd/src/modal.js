@@ -11,8 +11,14 @@ const handleImageInputChangeEvent = (event) => {
   const file = event.target.files[0]
   const titleInput = document.querySelector('input[name="title"]')
   const submitButton = document.querySelector('#submit-button')
+  const img = document.querySelector('.form-image')
+  const innerContainer = document.querySelector('.inner-container')
+
   // check if image format is valid
   if (!(file.type === 'image/jpeg' || file.type === 'image/png')) {
+    submitButton.classList.add('invalid')
+    img.src = ''
+    innerContainer.style.display = 'flex'
     event.target.value = ''
     event.target.setCustomValidity("L'image doit être au format jpeg ou png")
     event.target.reportValidity()
@@ -21,8 +27,6 @@ const handleImageInputChangeEvent = (event) => {
 
   // read image and display it
   const reader = new FileReader()
-  const img = document.querySelector('.form-image')
-  const innerContainer = document.querySelector('.inner-container')
   reader.onload = e => {
     img.src = e.target.result
     innerContainer.style.display = 'none'
