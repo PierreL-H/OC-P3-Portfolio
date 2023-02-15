@@ -1,6 +1,11 @@
 import sharedData from './shared-data.js'
 import { appendWork, deleteWork } from './works.js'
 
+// function to close the modal
+const closeModal = () => {
+  const modal = document.querySelector('.modal')
+  modal.style.display = 'none'
+}
 // handle form's file input's change event
 const handleImageInputChangeEvent = (event) => {
   const file = event.target.files[0]
@@ -296,18 +301,12 @@ export const createModalListeners = () => {
   const editButton = document.querySelector('.gallery-edit-container')
   const closeButton = document.getElementById('close')
   const backButton = document.getElementById('back')
+  let clickTarget
   // listener on the edit button to open the modal
   editButton.addEventListener('click', e => {
     e.preventDefault()
     drawGallery()
     modal.style.display = 'block'
-  })
-
-  // listener on window to close the modal
-  window.addEventListener('click', e => {
-    if (e.target === modal) {
-      modal.style.display = 'none'
-    }
   })
 
   // listener on the close button to close the modal
@@ -317,5 +316,16 @@ export const createModalListeners = () => {
 
   backButton.addEventListener('click', () => {
     drawGallery()
+  })
+
+  // add event listeners so modal only closes if click initiates and ends on modal
+  document.body.addEventListener('mousedown', e => {
+    clickTarget = e.target
+    console.log(clickTarget)
+  })
+  document.body.addEventListener('mouseup', e => {
+    if (clickTarget === modal && e.target === modal) {
+      closeModal()
+    }
   })
 }
