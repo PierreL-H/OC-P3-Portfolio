@@ -1,3 +1,4 @@
+import sharedData from './shared-data.js'
 // create Work class
 export class Work {
   constructor (jsonData) {
@@ -40,5 +41,20 @@ export const deleteWork = async (workID) => {
     }
   })
   console.log(response)
-  return response
+  // if successful, remove work from dom
+  if (response.status === 204) {
+    // find all delete buttons, iterate through them to find the id, if it matches delete closest modal-work
+    const deleteButtons = document.querySelectorAll('.delete-button')
+    for (const deleteButton of deleteButtons) {
+      if (parseInt(deleteButton.dataset.id) === workID) {
+        deleteButton.closest('.modal-work').remove()
+        break
+      }
+    }
+    const figure = document.querySelectorAll('[data-id~="' + workID + '"]')
+    sharedData.works = sharedData.works.filter(item => item.id !== workID)
+    figure[0]?.remove()
+    const gallery = document.querySelector('.gallery')
+    !gallery.firstChild && (gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>')
+  }
 }

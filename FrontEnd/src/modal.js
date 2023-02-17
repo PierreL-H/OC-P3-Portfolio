@@ -194,17 +194,7 @@ export const drawGallery = () => {
       const dataString = e.target.closest('div').dataset.id
       const dataId = parseInt(dataString)
       if (confirm(`Voulez-vous vraiment supprimer le travail ${dataId}`)) {
-        const response = await deleteWork(dataId)
-
-        // if successful, remove work from dom
-        if (response.status === 204) {
-          e.target.closest('.modal-work').remove()
-          const figure = document.querySelectorAll('[data-id~="' + dataId + '"]')
-          sharedData.works = sharedData.works.filter(item => item.id !== dataId)
-          figure[0]?.remove()
-          const gallery = document.querySelector('.gallery')
-          !gallery.firstChild && (gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>')
-        }
+        await deleteWork(dataId)
       }
     })
   }
