@@ -90,6 +90,8 @@ const handleFormSubmitEvent = async (event) => {
     json.categoryId = parseInt(json.categoryId)
     sharedData.works.push(json)
 
+    const gallery = document.querySelector('.gallery')
+    gallery.firstChild?.tagName === 'P' && (gallery.firstChild.remove())
     // check which filter is active
     if (document.querySelector('.filter-button-all').classList.contains('active')) {
       // if 'all' is selected, append the new work
@@ -107,8 +109,6 @@ const handleFormSubmitEvent = async (event) => {
         }
       }
       if (categoryName === filterCategory) {
-        const gallery = document.querySelector('.gallery')
-        gallery.firstChild?.tagName === 'P' && (gallery.innerHTML = '')
         appendWork(json)
       }
     }
