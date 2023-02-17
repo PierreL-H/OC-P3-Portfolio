@@ -145,6 +145,15 @@ const handleInputInputEvent = e => {
   e.target.value ? submitButtonClasses.remove('invalid') : submitButtonClasses.add('invalid')
 }
 
+// handle delete all click event
+const handleDeleteAllClickEvent = () => {
+  if (confirm('Souhaitez vous vraiment supprimer la galerie ?')) {
+    const idMap = sharedData.works.map(work => work.id)
+    for (const id of idMap) {
+      deleteWork(id)
+    }
+  }
+}
 // create category drop down list
 const createCategorySelect = () => {
   const select = document.createElement('select')
@@ -205,11 +214,16 @@ export const drawGallery = () => {
   const addButton = document.createElement('button')
   addButton.classList = 'modal-button'
   addButton.textContent = 'Ajouter une photo'
+  const deleteAll = document.createElement('p')
+  deleteAll.classList = 'delete-all'
+  deleteAll.textContent = 'Supprimer la galerie'
   separator.appendChild(addButton)
+  separator.appendChild(deleteAll)
   addButton.addEventListener('click', e => {
     e.preventDefault()
     drawAddWindow()
   })
+  deleteAll.addEventListener('click', handleDeleteAllClickEvent)
 }
 
 // draw add photo window
