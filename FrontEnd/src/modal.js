@@ -107,6 +107,8 @@ const handleFormSubmitEvent = async (event) => {
         }
       }
       if (categoryName === filterCategory) {
+        const gallery = document.querySelector('.gallery')
+        gallery.firstChild?.tagName === 'P' && (gallery.innerHTML = '')
         appendWork(json)
       }
     }
@@ -200,6 +202,8 @@ export const drawGallery = () => {
           const figure = document.querySelectorAll('[data-id~="' + dataId + '"]')
           sharedData.works = sharedData.works.filter(item => item.id !== dataId)
           figure[0]?.remove()
+          const gallery = document.querySelector('.gallery')
+          !gallery.firstChild && (gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>')
         }
       }
     })

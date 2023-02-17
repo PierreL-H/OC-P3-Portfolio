@@ -76,6 +76,11 @@ export const addFilterEventListeners = (works) => {
 
       // filter the list of works, store it in filteredList and display it
       const filteredList = sharedData.works.filter((work) => work.category.name === button.dataset.filter)
+      // if filtered list is empty, display message and return
+      if (filteredList.length === 0) {
+        gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>'
+        return
+      }
       gallery.innerHTML = ''
       for (const work of filteredList) {
         appendWork(work)
