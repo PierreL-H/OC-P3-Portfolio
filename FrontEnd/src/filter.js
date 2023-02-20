@@ -53,7 +53,12 @@ export const addFilterEventListeners = (works) => {
     }
     e.target.classList.add('active')
 
-    // display all ways
+    // display message if no works, otherwise display all works
+    if (sharedData.works.length === 0) {
+      gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>'
+      return
+    }
+
     gallery.innerHTML = ''
     for (const work of sharedData.works) {
       appendWork(work)
