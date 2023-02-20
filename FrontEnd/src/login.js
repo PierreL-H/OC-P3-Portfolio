@@ -6,29 +6,32 @@
 import { logout } from './logout.js'
 
 // Send login request to the api
-const sendLoginRequest = async (emailString, passwordString) => {
+const sendLoginRequest = async (formData) => {
+  const errorMessage = document.querySelector('.error')
   const response = await fetch('http://localhost:5678/api/users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      email: emailString,
-      password: passwordString
-    })
+    body: JSON.stringify(Object.fromEntries(formData))
   })
 
-  const data = await response.json()
-  console.log(data)
+  const data = await response?.json()
+
   // If token exists, save it to local storage and redirect to index.html
-  if (data.token) {
-    window.sessionStorage.setItem('access_token', data.token)
-    window.location.replace('./index.html')
-  } else {
-    const errorMessage = document.querySelector('.error')
-    console.log(errorMessage)
-    errorMessage.textContent = 'Something went wrong'
-    errorMessage.style.visibility = 'visible'
+  switch (response.status) {
+    case 200:
+      window.sessionStorage.setItem('access_token', data.token)
+      window.location.replace('./index.html')
+      break
+    case 404:
+      errorMessage.textContent = "L'utilisateur n'existe pas"
+      errorMessage.style.visibility = 'visible'
+      break
+    default:
+      errorMessage.textContent = "Une erreur s'est produite"
+      errorMessage.style.visibility = 'visible'
+      break
   }
 }
 
@@ -36,6 +39,7 @@ const sendLoginRequest = async (emailString, passwordString) => {
 if (window.sessionStorage.getItem('access_token')) {
   logout()
 }
+
 // Make event listener to get login credentials from form
 /** @type {HTMLFormElement} */
 const form = document.querySelector('#login form')
@@ -44,7 +48,6 @@ form.addEventListener('submit', (event) => {
   const errorMessage = document.querySelector('.error')
   errorMessage.textContent = ''
   errorMessage.style.visibility = 'hidden'
-  const email = form.elements.email.value
-  const password = form.elements.password.value
-  sendLoginRequest(email, password)
+  const formData = new FormData(form)
+  sendLoginRequest(formData)
 })
