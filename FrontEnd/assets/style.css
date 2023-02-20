@@ -330,11 +330,17 @@ footer nav ul {
 
 .separator {
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	gap: 25px;
+	justify-content: space-around;
 	align-items: center;
-	height: 100px;
 	margin-top: 50px;	
 	border-top: 1px solid #bebebe;
+	padding: 40px 0 20px 0;
+}
+.delete-all {
+	color: red;
+	cursor: pointer;
 }
 .modal-button {
 	border: none;

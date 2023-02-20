@@ -90,6 +90,8 @@ const handleFormSubmitEvent = async (event) => {
     json.categoryId = parseInt(json.categoryId)
     sharedData.works.push(json)
 
+    const gallery = document.querySelector('.gallery')
+    gallery.firstChild?.tagName === 'P' && (gallery.firstChild.remove())
     // check which filter is active
     if (document.querySelector('.filter-button-all').classList.contains('active')) {
       // if 'all' is selected, append the new work
@@ -107,8 +109,6 @@ const handleFormSubmitEvent = async (event) => {
         }
       }
       if (categoryName === filterCategory) {
-        const gallery = document.querySelector('.gallery')
-        gallery.firstChild?.tagName === 'P' && (gallery.innerHTML = '')
         appendWork(json)
       }
     }
@@ -145,6 +145,15 @@ const handleInputInputEvent = e => {
   e.target.value ? submitButtonClasses.remove('invalid') : submitButtonClasses.add('invalid')
 }
 
+// handle delete all click event
+const handleDeleteAllClickEvent = () => {
+  if (confirm('Souhaitez vous vraiment supprimer la galerie ?')) {
+    const idMap = sharedData.works.map(work => work.id)
+    for (const id of idMap) {
+      deleteWork(id)
+    }
+  }
+}
 // create category drop down list
 const createCategorySelect = () => {
   const select = document.createElement('select')
@@ -194,17 +203,7 @@ export const drawGallery = () => {
       const dataString = e.target.closest('div').dataset.id
       const dataId = parseInt(dataString)
       if (confirm(`Voulez-vous vraiment supprimer le travail ${dataId}`)) {
-        const response = await deleteWork(dataId)
-
-        // if successful, remove work from dom
-        if (response.status === 204) {
-          e.target.closest('.modal-work').remove()
-          const figure = document.querySelectorAll('[data-id~="' + dataId + '"]')
-          sharedData.works = sharedData.works.filter(item => item.id !== dataId)
-          figure[0]?.remove()
-          const gallery = document.querySelector('.gallery')
-          !gallery.firstChild && (gallery.innerHTML = '<p style="text-align: center; grid-column-start: 2">Rien à afficher</p>')
-        }
+        await deleteWork(dataId)
       }
     })
   }
@@ -215,11 +214,16 @@ export const drawGallery = () => {
   const addButton = document.createElement('button')
   addButton.classList = 'modal-button'
   addButton.textContent = 'Ajouter une photo'
+  const deleteAll = document.createElement('p')
+  deleteAll.classList = 'delete-all'
+  deleteAll.textContent = 'Supprimer la galerie'
   separator.appendChild(addButton)
+  separator.appendChild(deleteAll)
   addButton.addEventListener('click', e => {
     e.preventDefault()
     drawAddWindow()
   })
+  deleteAll.addEventListener('click', handleDeleteAllClickEvent)
 }
 
 // draw add photo window
